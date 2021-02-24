@@ -12,13 +12,32 @@
 <body>
 <h1>Validate + Clean Model</h1>
 
-<!-- <p>Note: This plugin only works in FormIt for Windows.</p> -->
+<hr>
+
+<b><h3>Solid Model Diagnostics</h3></b> 
+
+<p>FormIt offers built-in diagnostics to identify issues with solid models.</p>
+
+<ul>
+    <li>Go to the <b>Visual Styles</b> palette</li>
+        <ul style="list-style: none;">
+            <li><img src="img/VisStyles.png" style="width: 2em; height: 2em;"></li>
+        </ul>
+    <li>Click on the <b>Diagnostics</b> tab</li>
+        <ul style="list-style: none;">
+            <li><img src="img/Diagnostics.png" style="width: 2em; height: 2em;"></li>
+        </ul>
+    <li>Enable <b>Watertight Issues</b> and <b>Back Faces</b></li>
+</ul>
+<p><b><a id="BlogLink" href="javascript:void(0);">Learn how to use these diagnostics to repair solid models.</b></a></p>
 
 <hr>
 
-<b><p>Validate</p></b> 
+<b><h3>Validate Model</h3></b> 
 
-<p>Use Validate to check for any geometric corruption that could result in modeling failures.</p>
+<p><i>Currently available in FormIt for Windows only.</i></p>
+
+<p>Use Validate to check for geometric corruption that could result in modeling failures.</p>
 
 <div id="form">
     <form name=a>
@@ -27,9 +46,11 @@
 
 <hr>
 
-<b><p>Clean</p></b> 
+<b><h3>Clean Model</h3></b> 
 
-<p>Use Clean to try fixing issues found in Validate.</p>
+<p><i>Currently available in FormIt for Windows only.</i></p>
+
+<p>Use Clean to fix issues found in the Validate step.</p>
 
 <p>Note that Clean may delete invalid geometry, and may change the appearance of the model.</p>
 
@@ -50,5 +71,15 @@
 <hr>
 
 </div>
+
+<!-- script for opening the blog post model -->
+<script type="text/javascript">
+    validateCleanModel = [];
+    document.getElementById("BlogLink").addEventListener("click", function()
+    {
+        FormItInterface.CallMethod("FormIt.OpenURL", 'https://formit.autodesk.com/blog/post/repairing-solid-models');
+    });
+</script>
+
 </body>
 </html>

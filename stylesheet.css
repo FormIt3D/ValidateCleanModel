@@ -4,6 +4,12 @@ h1 {
     color: grey;
 }
 
+h3 {
+    font-family: Arial;
+    font-size: 16px;
+    color: grey;
+}
+
 input {
     border: 1px solid #4676a9;
     padding-left: 1px;
@@ -65,4 +71,17 @@ p, ul {
 ul {
     padding-left: 20px;
     line-height: 20px;
+}
+
+ a {
+    color: #4676a9;
+    text-decoration: none;
+}
+
+a:hover {
+    color: rgb(158, 189, 199);
+}
+
+a:visited {
+    color: #4676a9;
 }
