@@ -1,0 +1,8 @@
+{
+    "PluginName": "Validate + Clean Model",
+    "PluginDescription": "Check the FormIt model for issues that might lead to modeling failures, and learn how to use solid modeling diagnostics.",
+    "PluginType": "Panel",
+    "Scripts": []
+    ,"Panel": "PLUGINLOCATION/index.html",
+    "PanelIcon": "PLUGINLOCATION/img/validate_clean_model@2x.png"
+}

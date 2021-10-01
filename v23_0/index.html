@@ -1,0 +1,92 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
+    <link rel="stylesheet" type="text/css" href="https://formit3d.github.io/FormItExamplePlugins/SharedPluginFiles/FormItPluginStyling.css"/>
+    <title>Validate + Clean Model</title>
+    <META NAME="Title" CONTENT="Validate + Clean Model">
+    <META NAME="Author" CONTENT="Autodesk FormIt">
+    <script type="text/javascript" src="https://formit3d.github.io/SharedPluginUtilities/FormIt.js"></script>
+    <script type="text/javascript" src="https://formit3d.github.io/SharedPluginUtilities/FormItInterface.js"></script>
+    <script type="text/javascript" src="https://formit3d.github.io/FormItExamplePlugins/SharedPluginFiles/FormItPluginUI.js"></script>
+    <script type="text/javascript" src="ValidateCleanModel.js"></script>
+    <script type="text/javascript">
+        FormItInterface.AddEventListener("DOMContentLoaded");
+    </script>
+</head>
+<body>
+    <!-- fake the standard auto-generated UI, and enable the use of standard stylesheets, by putting everything into a content container -->
+    <div id='contentContainer' class='contentContainer'>
+
+        <h1>Validate + Clean Model</h1>
+
+        <hr>
+
+        <b><h3>Solid Model Diagnostics</h3></b> 
+
+        <p>FormIt offers built-in diagnostics to identify issues with solid models.</p>
+
+        <ul>
+            <li>Go to the <b>Visual Styles</b> palette</li>
+                <ul style="list-style: none;">
+                    <li><img src="img/VisStyles.png" style="width: 2em; height: 2em;"></li>
+                </ul>
+            <li>Click on the <b>Diagnostics</b> tab</li>
+                <ul style="list-style: none;">
+                    <li><img src="img/Diagnostics.png" style="width: 2em; height: 2em;"></li>
+                </ul>
+            <li>Enable <b>Watertight Issues</b> and <b>Back Faces</b></li>
+        </ul>
+        <p><b><a id="BlogLink" href="javascript:void(0);">Learn how to use these diagnostics to repair solid models.</b></a></p>
+
+        <hr>
+
+        <b><h3>Validate Model</h3></b> 
+
+        <p>Use Validate to check for geometric corruption that could result in modeling failures.</p>
+
+        <div id="form">
+            <form name=a>
+            <input type=button value="Validate Model" onClick="ValidateCleanModel.ValidateModel();">
+        </form>
+
+        <hr>
+
+        <b><h3>Clean Model</h3></b> 
+
+        <p>Use Clean to fix issues found in the Validate step.</p>
+
+        <p>Note that Clean may delete invalid geometry, and may change the appearance of the model.</p>
+
+        <p id='toleranceInput'></p>
+
+        <script type="text/javascript">
+                document.getElementById('toleranceInput').appendChild(new FormIt.PluginUI.TextInputModule('Tolerance: ', 'filletRadiusModule', 'inputModuleContainerTop', 'toleranceInputModule', FormIt.PluginUI.convertValueToDimensionString).element);
+        </script>
+
+        <ul>
+            <li>A tolerance value of 0 will fix invalid geometry found during validation. </li>
+            <li>Higher values will delete and merge any edges in the model that are shorter than the provided tolerance.</li>
+        </ul>
+
+        <div id="form">
+                <form name=b>
+                <input type=button value="Clean Model" onClick="FormItWorkflowPlugins.SubmitClean();">
+            </form>
+
+        <hr>
+
+        </div>
+
+        <!-- script for opening the blog post model -->
+        <script type="text/javascript">
+            validateCleanModel = [];
+            document.getElementById("BlogLink").addEventListener("click", function()
+            {
+                FormItInterface.CallMethod("FormIt.OpenURL", 'https://formit.autodesk.com/blog/post/repairing-solid-models');
+            });
+        </script>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+
+form {
+    font-family: Arial;
+    margin-left: 0px;
+}
+
+p, ul {
+    font-family: Arial;
+    font-size: 14px;
+}
+
+ul {
+    padding-left: 20px;
+    line-height: 20px;
+}
+
+ a {
+    color: #4676a9;
+    text-decoration: none;
+}
+
+a:hover {
+    color: rgb(158, 189, 199);
+}
+
+a:visited {
+    color: #4676a9;
+}
