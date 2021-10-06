@@ -10,7 +10,9 @@
     <script type="text/javascript" src="https://formit3d.github.io/FormItExamplePlugins/SharedPluginFiles/FormItPluginUI.js"></script>
     <script type="text/javascript" src="ValidateCleanModel.js"></script>
     <script type="text/javascript">
+
         FormItInterface.AddEventListener("DOMContentLoaded");
+        
     </script>
 </head>
 <body>
@@ -44,10 +46,8 @@
 
         <p>Use Validate to check for geometric corruption that could result in modeling failures.</p>
 
-        <div id="form">
-            <form name=a>
-            <input type=button value="Validate Model" onClick="ValidateCleanModel.ValidateModel();">
-        </form>
+        <!-- create an empty div for the JS script to populate and update later -->
+        <div id=validateSectionContainerDiv></div>
 
         <hr>
 
@@ -77,13 +77,20 @@
 
         </div>
 
-        <!-- script for opening the blog post model -->
+        <!-- script for opening the blog post link -->
         <script type="text/javascript">
             validateCleanModel = [];
             document.getElementById("BlogLink").addEventListener("click", function()
             {
                 FormItInterface.CallMethod("FormIt.OpenURL", 'https://formit.autodesk.com/blog/post/repairing-solid-models');
             });
+        </script>
+
+        <!-- initialize the JS-powered UI -->
+        <script type="text/javascript">
+
+            ValidateCleanModel.initializeUI();
+            
         </script>
 
     </div>
