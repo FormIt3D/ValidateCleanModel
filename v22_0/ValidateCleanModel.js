@@ -11,16 +11,25 @@ ValidateCleanModel.validateResultsMessageDivID = 'validateResultsMessageDiv';
 ValidateCleanModel.validateResultsListDivID = 'validateResultsListDiv';
 
 ValidateCleanModel.cleanSectionContainerID = 'cleanSectionContainerDiv';
+ValidateCleanModel.cleanResultsContainerDivID = 'cleanResultsContainerDiv';
+ValidateCleanModel.cleanResultsMessageDivID = 'cleanResultsMessageDiv';
+ValidateCleanModel.cleanResultsListDivID = 'cleanResultsListDiv';
+ValidateCleanModel.toleranceInputModuleID = 'toleranceInputModule';
+ValidateCleanModel.toleranceInputID = 'toleranceInput';
 
 ValidateCleanModel.isModelValid = undefined;
 ValidateCleanModel.modelValidationErrors = '';
 ValidateCleanModel.modelCheckedCleanResultMessage = 'This model is clean! No validation issues found.';
 ValidateCleanModel.modelCheckFailedResultMessage = 'This model contains errors. Try fixing them with the Clean command below. <br><br> Here are the errors FormIt found:';
+ValidateCleanModel.noCleanRequiredMessage = 'This model was already clean and remains unchanged.'
+ValidateCleanModel.cleanSuccessMessage = 'This model has been cleaned!'
 
 // this plugin uses a mix of hand-defined HTML, and JS-powered UI
 ValidateCleanModel.initializeUI = async function()
 {
     // validate section
+
+    // validate section container - this is created in the HTML
     let validateSectionContainer = document.getElementById(ValidateCleanModel.validateSectionContainerDivID);
 
     // create the validate button
@@ -44,6 +53,35 @@ ValidateCleanModel.initializeUI = async function()
     let validateResultsList = document.createElement('div');
     validateResultsList.id = ValidateCleanModel.validateResultsListDivID;
     validateResultsContainer.appendChild(validateResultsList);
+
+    // clean section
+
+    // clean section container - this is created in the HTML
+    let cleanSectionContainer = document.getElementById(ValidateCleanModel.cleanSectionContainerID);
+
+    // create the tolerance input
+    cleanSectionContainer.appendChild(new FormIt.PluginUI.TextInputModule('Tolerance: ', ValidateCleanModel.toleranceInputModuleID, 'inputModuleContainerTop', ValidateCleanModel.toleranceInputID, FormIt.PluginUI.convertValueToDimensionString).element);
+
+    // add logic to the keypress events in the input element
+    document.getElementById(ValidateCleanModel.toleranceInputID).value = await FormIt.StringConversion.LinearValueToString(0);
+
+    // create the clean button
+    cleanSectionContainer.appendChild(new FormIt.PluginUI.Button('Clean Model', ValidateCleanModel.cleanModel).element);
+
+    // clean results container - starts hidden
+    let cleanResultsContainer = document.createElement('div');
+    cleanResultsContainer.id = ValidateCleanModel.cleanResultsContainerDivID;
+    cleanResultsContainer.className = 'hide';
+    cleanSectionContainer.appendChild(cleanResultsContainer);
+
+    let cleanResultsHeader = document.createElement('div');
+    cleanResultsHeader.style.fontWeight = 'bold';
+    cleanResultsHeader.innerHTML = 'Clean Results:'
+    cleanResultsContainer.appendChild(cleanResultsHeader);
+
+    let cleanResultsMessage = document.createElement('p');
+    cleanResultsMessage.id = ValidateCleanModel.cleanResultsMessageDivID;
+    cleanResultsContainer.appendChild(cleanResultsMessage);
 }
 
 ValidateCleanModel.updateUIForValidationResults = async function()
@@ -69,6 +107,28 @@ ValidateCleanModel.updateUIForValidationResults = async function()
         // generate the error list
         ValidateCleanModel.populateErrorListWithResults();
     }
+}
+
+ValidateCleanModel.updateUIForCleanResults = async function(aCleanResults)
+{
+        // make the result container div visible
+        document.getElementById(ValidateCleanModel.cleanResultsContainerDivID).className = 'infoContainer';
+    
+        // update messaging depending on the result
+        if (aCleanResults.length == 0)
+        {
+            document.getElementById(ValidateCleanModel.cleanResultsMessageDivID).innerHTML = ValidateCleanModel.noCleanRequiredMessage;
+        }
+        else
+        {
+            document.getElementById(ValidateCleanModel.cleanResultsMessageDivID).innerHTML = ValidateCleanModel.cleanSuccessMessage;
+        }
+}
+
+ValidateCleanModel.updateUIForUnitChange = async function()
+{
+    // update the tolerance input
+    document.getElementById(ValidateCleanModel.toleranceInputID).value = await FormIt.StringConversion.LinearValueToString((await FormIt.StringConversion.StringToLinearValue(document.getElementById(ValidateCleanModel.toleranceInputID).value)).second);
 }
 
 ValidateCleanModel.populateErrorListWithResults = async function()
@@ -102,10 +162,14 @@ ValidateCleanModel.validateModel = async function()
     await ValidateCleanModel.updateUIForValidationResults();
 }
 
-ValidateCleanModel.cleanModel = function()
+ValidateCleanModel.cleanModel = async function()
 {
     console.clear();
     console.log("Clean Model");
 
-    //FormIt.Commands.DoCommand("Clean Model");
+    let tolerance = document.getElementById(ValidateCleanModel.toleranceInputModuleID).value;
+
+    let aCleanResults = await WSM.APICleanModel(0, tolerance);
+
+    ValidateCleanModel.updateUIForCleanResults(aCleanResults);
 }

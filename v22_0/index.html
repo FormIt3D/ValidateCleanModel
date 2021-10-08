@@ -10,9 +10,20 @@
     <script type="text/javascript" src="https://formit3d.github.io/FormItExamplePlugins/SharedPluginFiles/FormItPluginUI.js"></script>
     <script type="text/javascript" src="ValidateCleanModel.js"></script>
     <script type="text/javascript">
+        FormItInterface.Initialize(function () {
 
-        FormItInterface.AddEventListener("DOMContentLoaded");
-        
+            // initialize the UI
+            // this must be called from here, to ensure the HTML page is loaded
+            // before scripts try to access the window document
+            ValidateCleanModel.initializeUI();
+
+            // subscribe to the message sent when units are changed
+            FormItInterface.SubscribeMessage("FormIt.Message.kUnitTypeChanged", async function(payload)
+            {
+                await ValidateCleanModel.updateUIForUnitChange();
+            });
+
+        }); // DOMContentLoaded
     </script>
 </head>
 <body>
@@ -57,25 +68,13 @@
 
         <p>Note that Clean may delete invalid geometry, and may change the appearance of the model.</p>
 
-        <p id='toleranceInput'></p>
-
-        <script type="text/javascript">
-                document.getElementById('toleranceInput').appendChild(new FormIt.PluginUI.TextInputModule('Tolerance: ', 'filletRadiusModule', 'inputModuleContainerTop', 'toleranceInputModule', FormIt.PluginUI.convertValueToDimensionString).element);
-        </script>
+        <!-- create an empty div for the JS script to populate and update later -->
+        <div id=cleanSectionContainerDiv></div>
 
         <ul>
             <li>A tolerance value of 0 will fix invalid geometry found during validation. </li>
             <li>Higher values will delete and merge any edges in the model that are shorter than the provided tolerance.</li>
         </ul>
-
-        <div id="form">
-                <form name=b>
-                <input type=button value="Clean Model" onClick="FormItWorkflowPlugins.SubmitClean();">
-            </form>
-
-        <hr>
-
-        </div>
 
         <!-- script for opening the blog post link -->
         <script type="text/javascript">
@@ -84,13 +83,6 @@
             {
                 FormItInterface.CallMethod("FormIt.OpenURL", 'https://formit.autodesk.com/blog/post/repairing-solid-models');
             });
-        </script>
-
-        <!-- initialize the JS-powered UI -->
-        <script type="text/javascript">
-
-            ValidateCleanModel.initializeUI();
-            
         </script>
 
     </div>
