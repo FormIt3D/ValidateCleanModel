@@ -154,7 +154,7 @@ ValidateCleanModel.validateModel = async function()
     console.clear();
     console.log("Validate Model");
 
-    let nHistoryID = await WSM.APIGetActiveHistory();
+    let nHistoryID = await FormIt.GroupEdit.GetEditingHistoryID();
 
     ValidateCleanModel.modelValidationErrors = await WSM.APICheckHistoryValidityReadOnly(nHistoryID);
     ValidateCleanModel.isModelValid = ValidateCleanModel.modelValidationErrors.length == 0;
@@ -167,9 +167,10 @@ ValidateCleanModel.cleanModel = async function()
     console.clear();
     console.log("Clean Model");
 
+    let nHistoryID = await FormIt.GroupEdit.GetEditingHistoryID();
     let tolerance = document.getElementById(ValidateCleanModel.toleranceInputModuleID).value;
 
-    let aCleanResults = await WSM.APICleanModel(0, tolerance);
+    let aCleanResults = await WSM.APICleanModel(nHistoryID, tolerance);
 
     ValidateCleanModel.updateUIForCleanResults(aCleanResults);
 }
