@@ -140,10 +140,38 @@ ValidateCleanModel.populateErrorListWithResults = async function()
     {
         let ul = document.createElement('ul');
         let li = document.createElement('li');
-        li.innerHTML = ValidateCleanModel.modelValidationErrors[i]["errorString"];
+        let errorString = ValidateCleanModel.modelValidationErrors[i]["errorString"]
+        li.innerHTML = errorString;
         li.style.marginLeft = 0;
         errorListDiv.appendChild(ul);
         ul.appendChild(li);
+
+        // parse the error string to get the history and object ID
+        let splitString1 = errorString.split("(");
+        let splitString2 = splitString1[1].split(")");
+        let problemGeometryHistoryID = splitString2[0].split(",")[0];
+        let problemGeometryObjectID = splitString2[0].split(",")[1];
+        let problemGeometryObjectHistoryID = await WSM.ObjectHistoryID(problemGeometryHistoryID, problemGeometryObjectID);
+        let groupInstancePath = await WSM.GroupInstancePath(problemGeometryObjectID);
+
+        // get all instances of the history ID in question, then pick one, to narrow down to one instance
+        let aggregateTransf3ds = await WSM.APIGetAllAggregateTransf3dsReadOnly(problemGeometryHistoryID, 0);
+        let firstInstancePath = aggregateTransf3ds["paths"][0];
+
+        // append the instance path with the known history and object ID so we can target it later
+        let amendedInstancePath = await WSM.GroupInstancePath.AppendObjectHistoryID(firstInstancePath, problemGeometryObjectHistoryID);
+        console.log(JSON.stringify(firstInstancePath));
+
+        // create a button to zoom to the problem geometry
+        let zoomToButton = new FormIt.PluginUI.Button('View', async function()
+        {
+            await FormIt.Selection.ClearSelections();
+            await FormIt.Selection.SetSelections(amendedInstancePath);
+            await FormIt.View.FitToSelection(true /* animate transition */);
+    
+        }).element;
+        zoomToButton.style.marginLeft = 20;
+        errorListDiv.appendChild(zoomToButton);
     }
 }
 
